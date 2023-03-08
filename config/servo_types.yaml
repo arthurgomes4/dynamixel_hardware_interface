@@ -1,0 +1,29 @@
+mx28:
+# address table
+  operating_mode: 11
+  torque_enable: 64
+  goal_position: 116
+  goal_velocity: 104
+  present_load: 126
+  present_velocity: 128
+  present_position: 132
+  position_P: 84
+  position_I: 82
+  position_D: 80
+  velocity_P: 78
+  velocity_I: 76
+
+mx64:
+# address table
+  operating_mode: 11
+  torque_enable: 64
+  goal_position: 116
+  goal_velocity: 104
+  present_load: 126 # <-------
+  present_velocity: 128
+  present_position: 132
+  position_P: 84
+  position_I: 82
+  position_D: 80
+  velocity_P: 78
+  velocity_I: 76

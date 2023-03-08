@@ -1,0 +1,13 @@
+joint1:
+  id: 1
+  operating_mode: 3
+  position_pid: {p: 850, i: 0, d: 0}
+  velocity_pi: {p: 100, i: 1920}
+  type: mx28
+
+joint2:
+  id: 2
+  operating_mode: 3
+  position_pid: {p: 850, i: 0, d: 0}
+  velocity_pi: {p: 100, i: 1920}
+  type: mx28
