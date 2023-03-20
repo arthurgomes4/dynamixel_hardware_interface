@@ -11,6 +11,7 @@ extern const char* dynamixelAddrNames[];
 struct dynamixelServo
 {
     std::string name;
+    std::string joint_type;
 
     int id;
     int operating_mode;
@@ -31,6 +32,9 @@ struct dynamixelServo
     uint8_t velocity_I;
 };
 
-std::map<std::string, std::map< std::string, uint8_t>> readServoTypes(const char* file_name);
+typedef std::map<std::string, std::map< std::string, uint8_t>> servoTypesMap;
+typedef std::vector<dynamixelServo> servoInfoList;
 
-std::vector<dynamixelServo> readServoInfo(const char* file_name, std::map<std::string, std::map< std::string, uint8_t>> servo_types);
+servoTypesMap readServoTypes(const char* file_name);
+
+servoInfoList readServoInfo(const char* file_name, std::map<std::string, std::map< std::string, uint8_t>> servo_types);

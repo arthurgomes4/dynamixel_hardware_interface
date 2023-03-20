@@ -54,7 +54,7 @@ class myRobot : public hardware_interface::RobotHW
         joint_state.registerHandle(state_handle_a);
 
         registerInterface(&joint_state);
-
+    
         // connect and register the joint position interface
         hardware_interface::JointHandle pos_handle_a(joint_state.getHandle("joint1"), &cmd[0]);
         joint_position.registerHandle(pos_handle_a);

@@ -1,13 +1,15 @@
 joint1:
   id: 1
+  joint_type: position
   operating_mode: 3
-  position_pid: {p: 850, i: 0, d: 0}
+  position_pid: {p: 850, i: 1, d: 1}
   velocity_pi: {p: 100, i: 1920}
   type: mx28
 
 joint2:
   id: 2
+  joint_type: position
   operating_mode: 3
   position_pid: {p: 850, i: 0, d: 0}
   velocity_pi: {p: 100, i: 1920}
-  type: mx28
+  type: mx64

@@ -7,11 +7,32 @@ project(dynamixel_hardware_interface)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(catkin REQUIRED)
+find_package(catkin REQUIRED
+            roscpp
+            dynamixel_sdk
+            )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
+
+# Resolve system dependency on yaml-cpp, which apparently does not
+# provide a CMake find_package() module.
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(YAML_CPP REQUIRED yaml-cpp)
+find_path(YAML_CPP_INCLUDE_DIR
+  NAMES yaml_cpp.h
+  PATHS ${YAML_CPP_INCLUDE_DIRS}
+)
+find_library(YAML_CPP_LIBRARY
+  NAMES YAML_CPP
+  PATHS ${YAML_CPP_LIBRARY_DIRS}
+)
+link_directories(${YAML_CPP_LIBRARY_DIRS})
+
+if(NOT ${YAML_CPP_VERSION} VERSION_LESS "0.5")
+add_definitions(-DHAVE_NEW_YAMLCPP)
+endif(NOT ${YAML_CPP_VERSION} VERSION_LESS "0.5")
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -99,9 +120,9 @@ find_package(catkin REQUIRED)
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
+ INCLUDE_DIRS include
 #  LIBRARIES dynamixel_hardware_interface
-#  CATKIN_DEPENDS other_catkin_pkg
+#  CATKIN_DEPENDS roscpp
 #  DEPENDS system_lib
 )
 
@@ -112,24 +133,29 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
-# ${catkin_INCLUDE_DIRS}
+include
+${catkin_INCLUDE_DIRS}
+${YAML_CPP_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
-# add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/dynamixel_hardware_interface.cpp
-# )
-
+add_library(${PROJECT_NAME}
+  src/config_data.cpp
+)
+target_link_libraries(${PROJECT_NAME}
+  ${catkin_LIBRARIES}
+  yaml-cpp
+)   
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
-## either from message generation or dynamic reconfigure
+## either from message gen${PROJECT_NAME}eration or dynamic reconfigure
 # add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/dynamixel_hardware_interface_node.cpp)
+add_executable(test_node src/load_info.cpp)
+add_executable(hardware_interface src/hardware_interface.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -139,12 +165,18 @@ include_directories(
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-# add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(test_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(hardware_interface ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
-# target_link_libraries(${PROJECT_NAME}_node
-#   ${catkin_LIBRARIES}
-# )
+target_link_libraries(test_node
+  ${PROJECT_NAME}
+  ${catkin_LIBRARIES}
+)
+target_link_libraries(hardware_interface
+  ${PROJECT_NAME}
+  ${catkin_LIBRARIES}
+)
 
 #############
 ## Install ##

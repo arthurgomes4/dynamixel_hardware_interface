@@ -32,7 +32,6 @@ map<string, map< string, uint8_t>> readServoTypes(const char* file_name)
         for(const char* name : dynamixelAddrNames){
             addressTable[name] = (uint8_t)type.second[name].as<int>();
         }
-        cout << "Read Servo type: " << servo_name <<  endl;
         servo_types[servo_name] = addressTable;
     }
     return servo_types;
@@ -52,6 +51,7 @@ vector<dynamixelServo> readServoInfo(const char* file_name, map<string, map< str
         string type = item.second["type"].as<string>();
 
         joint.name = item.first.as<string>();
+        joint.joint_type = item.second["joint_type"].as<string>();
         joint.id = item.second["id"].as<int>();
         joint.operating_mode = item.second["operating_mode"].as<int>();
       
@@ -75,7 +75,6 @@ vector<dynamixelServo> readServoInfo(const char* file_name, map<string, map< str
         joint.velocity_P = servo_types[type]["velocity_P"];
         joint.velocity_I= servo_types[type]["velocity_I"];
 
-        cout << "read: " << joint.name << " of type: " << type << endl;
         joints.push_back(joint);
     }
     return joints;
