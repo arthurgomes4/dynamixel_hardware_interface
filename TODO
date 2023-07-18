@@ -1,0 +1,2 @@
+make function for velocity in bytes to radians per second.
+see about separate bulk writers for velocity and position. run it on a servo first.
